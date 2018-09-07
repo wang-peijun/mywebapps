@@ -5,8 +5,8 @@
 ## 问卷调查
 ### 概述
 用到的主要技术：  
-后端：[django][]，[allauth][]，[crispy][]，[jinja2][]，[django-redis][]，[werkzeug][]，[uwsgi][]，nginx[]  
-前端：[query][]，[bootstrap][]，[font-awesome][]
+后端：[django][]，[allauth][]，[crispy][]，[jinja2][]，[django-redis][]，[werkzeug][]，[uwsgi][]，[nginx][]  
+前端：[jquery][]，[bootstrap][]，[font-awesome][]
 
 [werkzeug]: http://werkzeug.pocoo.org/
 [allauth]: https://github.com/pennersr/django-allauth
@@ -82,7 +82,7 @@
   4. 发布页的js，用到jquery，问卷发布页的js写的磕磕绊绊，但最终的想要的效果实现了，其实就是前后端分离
   
 发布页重点提一下，初衷是为了充分利用数据库中已经存在的数据，选择问题后，会自动向后台查询和当前选择问题相关的选项，除了从后端查询数据， 发布页数据的构建完全和后端分离，构建完使用ajax提交给后端   
-*大胆的设想一下，人工智能时代，提问后，有人工智能程序生成可能的选项也完全有可能！
+**大胆的设想一下，提问后，由人工智能程序生成可能的选项也完全是有可能实现的吧！ 
 
 >在[这里](https://github.com/Hopetree/izone)借鉴到不少东西，帮忙推广一下！
   
