@@ -1,24 +1,30 @@
 # mywebapps
-一个实验性的网站，实现自己设想的web应用。目前使用的django框架。
-## 应用列表
-1. 问卷调查
+一个实验性的网站，实现自己设想的web应用。目前使用的django框架。 
+站点 http://www.mapy.tech
 
 ## 问卷调查
 ### 概述
-用到的主要技术：
-后端：django，allauth，crispy，jinja2，django-redis，werkzeug，uwsgi，nginx  
-前端：jquery，bootstrap，font-awesome
+用到的主要技术：  
+后端：[django][]，[allauth][]，[crispy][]，[jinja2][]，[django-redis][]，[werkzeug][]，[uwsgi][]，nginx[]  
+前端：[query][]，[bootstrap][]，[font-awesome][]
 
-http://werkzeug.pocoo.org/
-
+[werkzeug]: http://werkzeug.pocoo.org/
+[allauth]: https://github.com/pennersr/django-allauth
+[crispy]: https://django-crispy-forms.readthedocs.io/en/latest/index.html
+[jinja2]: http://jinja.pocoo.org/
+[uwsgi]: https://github.com/unbit/uwsgi-docs/blob/master/index.rst
+[nginx]: http://nginx.org/
+[jquery]: https://jquery.com/
+[bootstrap]: http://www.bootcss.com/
+[font-awesome] https://fontawesome.io/
 
 完成了主要功能，具体就是：
 
-1. 账户功能，使用的[allauth](https://github.com/pennersr/django-allauth)
-2. 问卷列表页
-3. 问卷发布页
-4. 问卷详情页，即参与调查页
-5. 结果展示页
+ 1. 账户功能，使用的allauth
+ 2. 问卷列表页
+ 3. 问卷发布页
+ 4. 问卷详情页，即参与调查页
+ 5. 结果展示页
 
 可以想到的，待完成的工作：
 
@@ -54,7 +60,7 @@ http://werkzeug.pocoo.org/
 没有使用django自带的模板，因为据说jinja2性能更优
 
  1. 两种模板可以在同一个项目中使用，搜索顺序就是模板引擎定义的顺序，先搜索到哪个用哪个
- 2. 因为jinja2默认没有缓存标签，参考<https://www.kancloud.cn/manual/jinja2/70475>，添加缓存标签
+ 2. 因为jinja2默认没有缓存标签，参考[这里](https://www.kancloud.cn/manual/jinja2/70475)，添加缓存标签
 
 ### 视图
 分页功能使用了两种方式：
@@ -63,7 +69,7 @@ http://werkzeug.pocoo.org/
  2. 只提供一个offset变量作为起始位置，每次取分页大小的数量即可
 
 ### 中间件
-参考<https://blog.csdn.net/qq_39687901/article/details/81387584>，实现了一个全局获得request对象的中间件
+参考[这里](https://blog.csdn.net/qq_39687901/article/details/81387584)，实现了一个全局获得request对象的中间件
 
 ### 缓存
 
@@ -83,6 +89,5 @@ http://werkzeug.pocoo.org/
 除了从后端查询数据， 发布页数据的构建完全和后端分离，构建完使用ajax提交给后端
 *大胆的设想一下，人工智能时代，提问后，有人工智能程序生成可能的选项也完全有可能！
 
-
-
+在[这里](https://github.com/Hopetree/izone)借鉴到不少东西，帮忙推广一下！
   
