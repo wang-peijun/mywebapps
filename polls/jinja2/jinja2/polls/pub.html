@@ -1,0 +1,174 @@
+{% extends 'jinja2/polls/base.html' %}
+{% block head_title %} 发布问卷 {% endblock %}
+{% block extra_head %}
+<script type="text/javascript" src="{{static('polls/js/jquery-ui-1.12.1/jquery-ui.js')}}"></script>
+<script type="text/javascript" src="{{static('polls/js/jquery.cookie.js')}}"></script>
+
+<style>
+  tr .index {cursor: pointer;}
+
+
+
+
+
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+
+<div class="row" xmlns="http://www.w3.org/1999/html">
+  <div class="col-md-12">
+    <div class="form-group">
+      <label for="PollTitle">主题</label>
+      <input type="text" class="form-control" id="title" placeholder="title">
+    </div>
+  </div>
+
+  <div class="col-md-12">
+    <div class="form-group">
+      <label for="PollTitle">描述</label>
+      <textarea class="form-control" rows="3" id="desc" placeholder="describe"></textarea>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 col-ms-6 col-xs-12">
+    <h4 class="text-center">选择问题</h4>
+    <div class="panel panel-default">
+      <!-- Default panel contents -->
+      <div class="panel-heading">
+        <div class="input-group">
+          <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+          <input type="text" id="search_question" class="form-control" placeholder="?">
+        </div>
+      </div>
+
+      <select id="question_list" class="form-control" multiple size="10">
+        {% for question in question_list %}
+        <option value="{{question.id}}">{{ question.content }}</option>
+        {% endfor %}
+      </select>
+
+
+      <div class="panel-heading">
+        <button id="more_question" class="btn btn-primary btn-sm" data-offset="{{offset}}">加载更多<span
+            class="glyphicon glyphicon-cloud-download"></span></button>
+        <div class="pull-right">
+          <button id="add_question" class="btn btn-primary btn-sm">选择<span
+              class=" glyphicon glyphicon-triangle-right"></span></button>
+        </div>
+        <span class="visible-md-block visible-lg-block"><small> 按住 <kbd>Control</kbd>，或者Mac上的 <kbd>Command</kbd>，可以选择多个。</small></span>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col-md-6 col-ms-6 col-xs-12">
+    <h4 class="text-center">选好的问题</h4>
+
+    <div class="panel panel-default"  style="height: 300px; width: auto; overflow: auto;">
+      <!-- Default panel contents -->
+      <div class="panel-heading">
+        <button id="new_question" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus" title="增加一个问题">新增</span>
+        </button>
+      </div>
+
+      <table class="table table-condensed table-hover table-bordered table-responsive sort">
+        <thead>
+        <tr>
+          <th width="10%">序号</th>
+          <th width="10%">类型</th>
+          <th width="80%">内容</th>
+        </tr>
+        </thead>
+
+
+        <tbody id="added_question_list" class="">
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="row">
+
+  <div class="col-md-6 col-ms-6 col-xs-12">
+    <h4 class="text-center">选择选项</h4>
+    <div class="panel panel-default">
+      <!-- Default panel contents -->
+      <div class="panel-heading">
+
+        <div class="input-group">
+          <span class="input-group-addon"><span class="glyphicon glyphicon-search"></span></span>
+          <input id="search_choice" type="text" class="form-control" placeholder="?" aria-describedby="basic-addon1"
+                 disabled>
+        </div>
+      </div>
+
+      <select id="choice_list" class="form-control" multiple size="10">
+      </select>
+
+
+      <div class="panel-heading">
+        <button id="more_choice" class="btn btn-primary btn-sm">加载更多<span
+            class="glyphicon glyphicon-cloud-download"></span></button>
+        <span id="please_choice_question" style="color:red;width:120px;" hidden> 请选择问题</span>
+        <div class="pull-right">
+          <button id="add_choice" class="btn btn-primary btn-sm">选择<span
+              class=" glyphicon glyphicon-triangle-right"></span></button>
+        </div>
+        <span class="visible-md-block visible-lg-block"><small> 按住 <kbd>Control</kbd>，或者Mac上的 <kbd>Command</kbd>，可以选择多个。</small></span>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col-md-6 col-ms-6 col-xs-12">
+    <h4 class="text-center">选好的选项</h4>
+    <div class="panel panel-default" style=" height: 300px; width: auto; overflow: auto;">
+      <!-- Default panel contents -->
+      <div class="panel-heading">
+        <button id="new_choice" class="btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"
+                                                                     title="增加一个选项">新增</span>
+        </button>
+      </div>
+
+      <table class="table table-condensed table-hover table-bordered sort">
+        <thead>
+        <tr>
+          <th width="10%">序号</th>
+          <th width="10%">补充</th>
+          <th width="80%">内容</th>
+        </tr>
+        </thead>
+        <tbody id="added_choice_list">
+        </tbody>
+      </table>
+    </div>
+
+
+  </div>
+
+</div>
+
+<div class="row">
+  <div class="col-md-2 col-md-offset-10">
+    <span><button type="button" class="btn btn-primary" id="preview">预览</button>
+    <button type="button" class="btn btn-primary" id="submit">提交</button></span>
+  </div>
+</div>
+
+
+{% endblock %}
+
+{% block extra_body %}
+<p data-questions-json="{{questions_json}}"></p>
+<script src="{{static('polls/js/pub.js')}}"></script>
+{% endblock %}
+

@@ -1,0 +1,76 @@
+{% extends 'jinja2/polls/base.html' %}
+{% block head_title %} 调查详情 {% endblock %}
+
+{% block content %}
+<h1>结果页</h1>
+<h1>主题：{{poll.title}}</h1>
+{% set date = poll.end_date %}
+<p>结束日期：{{date.year}}年{{date.month}}月{{date.day}}日{{date.hour}}时</p>
+{% set delta = poll.end_date - now() %}
+{% if delta.days < 0 %}
+<p>已结束</p>
+{% else %}
+<p>还有{{delta.days}}天{{delta.seconds//3600}}小时结束</p>
+{% endif %}
+
+<p>描述：{{poll.description}}</p>
+<hr/>
+<form action="{{ url('polls:vote', args=(poll.id,)) }}" method="post">
+  {{ csrf_input }}
+  <fieldset disabled>
+  {% for pq in poll.pollquestions %}
+
+    {% if pq.question.choice_type != 2 %}
+    <strong>{{pq.index}}、 {{pq.question.content}}【{{"多选" if pq.question.choice_type==2 else "单选"}}】: </strong>
+    {% else %}
+    <strong >{{pq.index}}、 {{pq.question.content}}【回答】: </strong>
+      <ul>
+      {% for answer in pq.answers.all() %}
+        <li style="color:red">{{loop.index}}. {{answer.content}}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% for vote in pq.voteset %}
+
+    {% if pq.question.choice_type == 0 %}
+
+    <div class="radio">
+      <label>
+        <input type="radio" name="{{pq.question.id}}" value="{{vote.choice.id}}">
+        {{vote.index}}. {{vote.choice.content}}
+      </label> <span style="color:red">共有{{vote.num}}人选择</span>
+      {% if vote.choice.has_extra_data %}
+        <ul>
+        {% for extra_data in ExtraData.objects.filter(vote=vote) %}
+          <li>{{extra_data.content}}</li>
+        {% endfor %}
+          </ul>
+      {% endif %}
+    </div>
+    {% elif pq.question.choice_type == 1 %}
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" name="{{pq.question.id}}" value="{{vote.choice.id}}">
+        {{vote.index}}. {{vote.choice.content}}
+      </label><span style="color:red">共有{{vote.num}}人选择</span>
+      {% if vote.choice.has_extra_data %}
+        <ul>
+        {% for extra_data in ExtraData.objects.filter(vote=vote) %}
+          <li>{{extra_data.content}}</li>
+        {% endfor %}
+          </ul>
+      {% endif %}
+
+    </div>
+    {% endif %}
+
+
+    {% endfor %}
+    <hr/>
+
+  {% endfor %}
+
+    </fieldset>
+</form>
+{% endblock %}

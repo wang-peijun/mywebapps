@@ -1,0 +1,64 @@
+{% extends 'jinja2/polls/base.html' %}
+{% block head_title %}问卷列表{% endblock %}
+
+{% block extra_head %}
+<script src="{{static('polls/js/index.js')}}"></script>
+{% endblock %}
+
+
+{% block content %}
+<h1>调查问卷列表</h1>
+<ul class="nav nav-pills nav-justified">
+  <li role="presentation" class="active" id="underway_nav"><a href="#">正在进行的调查问卷</a></li>
+  <li role="presentation" id="finished_nav"><a href="#">已结束的调查问卷</a></li>
+</ul>
+
+<div id="underway_page">
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      <li class="previous"><span aria-label="Previous"><span aria-hidden="true">&laquo;</span></span></li>
+
+      {% for i in underway_polls.paginator.page_range %}
+      <li class="page {% if i==1 %} active {% endif %}"><span>{{i}}</span></li>
+      {% endfor %}
+
+      <li class="next"><span aria-label="Next"><span aria-hidden="true">&raquo;</span></span></li>
+    </ul>
+  </nav>
+</div>
+
+<div id="finished_page" hidden>
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      <li class="previous"><span aria-label="Previous"><span aria-hidden="true">&laquo;</span></span></li>
+
+      {% for i in finished_polls.paginator.page_range %}
+      <li class="page {% if i==1 %} active {% endif %}"><span>{{i}}</span></li>
+      {% endfor %}
+
+      <li class="next"><span aria-label="Next"><span aria-hidden="true">&raquo;</span></span></li>
+    </ul>
+  </nav>
+</div>
+
+<div id="display_polls">
+  <div class="panel panel-default">
+    <!-- List group -->
+    <ul class="list-group">
+      {% if underway_polls %}
+        {% for poll in underway_polls %}
+        <li class="list-group-item"><a href="{{url('polls:detail', args=(poll.id,))}}">{{poll.title}}</a></li>
+        {% endfor %}
+      {% else %}
+        没有数据
+      {% endif %}
+    </ul>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_body %}
+<div data-first-underway-page="{{first_underway_page_data}}"></div>
+<div data-first-finished-page="{{first_finished_page_data}}"></div>
+{% endblock %}

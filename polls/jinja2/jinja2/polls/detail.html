@@ -1,0 +1,64 @@
+{% extends 'jinja2/polls/base.html' %}
+{% block head_title %} 调查详情{% endblock %}
+
+{% block content %}
+<h1>主题：{{poll.title}}</h1>
+{% set date = poll.end_date %}
+<p>结束日期：{{date.year}}年{{date.month}}月{{date.day}}日{{date.hour}}时</p>
+{% set delta = poll.end_date - now() %}
+<p>还有{{delta.days}}天{{delta.seconds//3600}}小时结束</p>
+
+<p>描述：{{poll.description}}</p>
+<hr/>
+<form action="{{ url('polls:vote', args=(poll.id,)) }}" method="post">
+  {{ csrf_input }}
+
+  {% cache '%s' % poll.id, 3600*24*7 %}
+ <fieldset>
+
+  {% for pq in poll.pollquestions %}
+
+    {% if pq.question.choice_type != 2 %}
+    <strong>{{pq.index}}、 {{pq.question.content}}【{{"多选" if pq.question.choice_type==2 else "单选"}}】: </strong>
+    {% else %}
+    <strong>{{pq.index}}、 {{pq.question.content}}【回答】: </strong>
+
+    <div><textarea name="{{pq.question.id}}"></textarea></div>
+    {% endif %}
+
+    {% for vote in pq.voteset %}
+
+    {% if pq.question.choice_type == 0 %}
+
+    <div class="radio">
+      <label>
+        <input type="radio" name="{{pq.question.id}}" value="{{vote.choice.id}}">
+        {{vote.index}}. {{vote.choice.content}}
+      </label>{% if vote.choice.has_extra_data %} <input type="text" name="extra:{{vote.choice.id}}:choice}}"> {% endif %}
+    </div>
+    {% elif pq.question.choice_type == 1 %}
+    <div class="checkbox">
+      <label>
+        <input type="checkbox" name="{{pq.question.id}}" value="{{vote.choice.id}}">
+        {{vote.index}}. {{vote.choice.content}}
+      </label>
+      {% if vote.choice.has_extra_data %} <input type="text" name="extra_data:{{pq.question.id}}:{{vote.choice.id}}"> {% endif %}
+    </div>
+    {% endif %}
+
+
+    {% endfor %}
+
+    <hr/>
+
+  {% endfor %}
+
+
+  <div><input type="submit" value="提交" /></div>
+   </fieldset>
+  {% endcache %}
+
+
+</form>
+
+{% endblock %}
