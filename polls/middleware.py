@@ -2,7 +2,7 @@ from django.utils.deprecation import MiddlewareMixin
 
 
 class GlobalRequestMiddleware(MiddlewareMixin):
-    # TODO:待修改,暂时凑合
+
     __instance = None
 
     # def __new__(cls, *args, **kwargs):

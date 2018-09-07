@@ -1,5 +1,5 @@
 from django.conf.urls import url
-from .views import detail, index, vote, result, test, pub, search_question_list, \
+from .views import detail, index, vote, result, gen_data, pub, search_question_list, \
     search_question_choices_list, preview, submit
 
 
@@ -14,6 +14,6 @@ urlpatterns = [
     url(r'^(?P<poll_id>\d+)/$', detail, name='detail'),
     url(r'^(?P<poll_id>\d+)/vote/$', vote, name='vote'),
     url(r'^(?P<poll_id>\d+)/result/$', result, name='result'),
-    url(r'^test/', test)
+    url(r'^gen_data/', gen_data)
 ]
 

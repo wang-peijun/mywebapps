@@ -2,9 +2,6 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.urls import reverse
 from django.utils import timezone
 
-from jinja2 import Environment
-
-
 from crispy_forms.utils import render_crispy_form
 
 from jinja2 import contextfunction
@@ -76,18 +73,8 @@ class FragmentCacheExtension(Extension):
         return rv
 
 
-class DoNothingExtension(Extension):
-    tags = {'donothing'}
-
-    def parse(self, parser):
-        return nodes
-    #
-    # def _do_nothing(self, *args, **kwargs):
-    #     return
-
-
 def environment(**options):
-    env = Environment(extensions=[FragmentCacheExtension, DoNothingExtension], **options)
+    env = Environment(extensions=[FragmentCacheExtension], **options)
     env.fragment_cache = SimpleCache()
     env.globals.update({
         'static': staticfiles_storage.url,

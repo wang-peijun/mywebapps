@@ -3,6 +3,7 @@ from .models import Poll, Question, Choice, PollQuestion, Vote, Answer
 from myauth.models import User
 
 # Register your models here.
+# 未充分利用
 
 
 class UserInline(admin.StackedInline):

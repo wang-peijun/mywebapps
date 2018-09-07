@@ -325,7 +325,7 @@ def submit(request):
 
 import random
 @login_required
-def test(request):
+def gen_data(request):
     choices = []
     for i in range(5):
         for j in range(5):
