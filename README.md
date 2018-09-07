@@ -7,6 +7,7 @@
 用到的主要技术：  
 后端：[django][]，[allauth][]，[crispy][]，[jinja2][]，[django-redis][]，[werkzeug][]，[uwsgi][]，[nginx][]  
 前端：[jquery][]，[bootstrap][]，[font-awesome][]
+
 [werkzeug]: http://werkzeug.pocoo.org/
 [allauth]: https://github.com/pennersr/django-allauth
 [crispy]: https://django-crispy-forms.readthedocs.io/en/latest/index.html
