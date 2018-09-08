@@ -14,6 +14,6 @@ urlpatterns = [
     url(r'^(?P<poll_id>\d+)/$', detail, name='detail'),
     url(r'^(?P<poll_id>\d+)/vote/$', vote, name='vote'),
     url(r'^(?P<poll_id>\d+)/result/$', result, name='result'),
-    url(r'^gen_data/', gen_data)
+    url(r'^gen_data/', gen_data),
 ]
 

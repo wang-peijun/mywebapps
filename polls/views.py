@@ -17,6 +17,7 @@ from django import template
 from django.contrib import messages
 import polls.signals
 from django.core.cache import cache
+from django.views.decorators.http import require_http_methods
 
 # redis连接池
 con = get_redis_connection('default')
@@ -181,21 +182,30 @@ def search_question_choices_list(request):
         return JsonResponse({'message': {'type': 'error', 'content': '无效的请求'}}, safe=False)
 
 
+@require_http_methods(['GET', 'POST', 'DELETE'])
 def detail(request: HttpRequest, poll_id):
     # key = request.path
     # 不能全部缓存，csrf_token会变化，jinja2片段缓存，env
     # html = con.get(key)
     # if html:
     #     return HttpResponse(html)
-
-    vote_queryset = Vote.objects.select_related('choice').order_by('index')
-    poll_questions_queryset = PollQuestion.objects.order_by('index').select_related('question').prefetch_related(Prefetch('votes', queryset=vote_queryset, to_attr='voteset'))
-    poll = Poll.objects.prefetch_related(Prefetch('poll_questions',
-                                                  queryset=poll_questions_queryset,
-                                                  to_attr='pollquestions')).get(pk=poll_id)
-    html = render_to_string('jinja2/polls/detail.html', {'poll': poll}, request=request)
-    # con.set(key, html, ex=3600*24)
-    return HttpResponse(html)
+    if request.method == 'GET':
+        vote_queryset = Vote.objects.select_related('choice').order_by('index')
+        poll_questions_queryset = PollQuestion.objects.order_by('index').select_related('question').prefetch_related(Prefetch('votes', queryset=vote_queryset, to_attr='voteset'))
+        poll = Poll.objects.prefetch_related(Prefetch('poll_questions',
+                                                      queryset=poll_questions_queryset,
+                                                      to_attr='pollquestions')).get(pk=poll_id)
+        html = render_to_string('jinja2/polls/detail.html', {'poll': poll}, request=request)
+        # con.set(key, html, ex=3600*24)
+        return HttpResponse(html)
+    elif request.method == 'POST':
+        # 修改
+        return HttpResponse('修改未实现')
+    elif request.method == 'DELETE':
+        # 删除
+        poll = get_object_or_404(Poll, pk=poll_id)
+        poll.delete()
+        return HttpResponse('删除成功')
 
 
 def vote(request: HttpRequest, poll_id):
