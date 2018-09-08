@@ -21,7 +21,7 @@
 [django-redis]: https://github.com/bluedazzle/django-redis-doc-chs/blob/master/source/index.rst
 
 完成了主要功能，具体就是：  
-  1. 账户功能，使用的allauth
+  1. 账户的注册登录功能
   2. 问卷列表页
   3. 问卷发布页
   4. 问卷详情页，即参与调查页
@@ -34,12 +34,13 @@
      * 设置问卷结果是否公开
      * 匿名或者实名投票
      * 保存未发布的问卷，修改未发布的问卷，还是使用发布页面的js完成
+     * 删除文件，接口已经实现
      * 结果展示，现在只是统计了一下数量
      * 样式设置，现在几乎没什么样式
      * 代码调优
   3. 数据验证，数据有效性验证，前端添加验证代码，因为使用了ajax，后端也要添加验证代码
   4. 扩展，答题系统，添加正确答案字段即可
-  5. 搜索功能，现在使用搜索还是数据库的in方法，效率太低
+  5. 搜索功能，现在使用数据库的in方法，效率太低
 
 ## 一些关键点
 ### 模型
@@ -51,38 +52,39 @@
   * 选项表choice，has_extra_data字段表示选项是否有额为数据，True表示类似"其他，请输入..."这样的选项
   * poll_question表，poll和question多对多关系表，添加index字段表示question在poll中的位置（顺序）
   * 投票表vote，poll_question和choice多对多关系表，添加index字段表示choice在poll_question中的位置（顺序）
-  * 回答表answer，有一个poll_question外键，多对一关系
+  * 回答表answer，有一个poll_question外键，是多对一关系
   * 选项的额外数据表extra_data，和vote是一对一关系
   * 用户表user，和vote是多对多关系，和answer是一对多关系，因为投票可以匿名可以实名，user字段可以为空
     user和poll是一对多关系，登录用户才可以发布问卷，user字段不能为空
 
 ### 模板
-没有使用django自带的模板，因为据说jinja2性能更优。  
-  1. 两种模板可以在同一个项目中使用，搜索顺序就是模板引擎定义的顺序，先搜索到哪个用哪个
-  2. 因为jinja2默认没有缓存标签，参考[这里](https://www.kancloud.cn/manual/jinja2/70475)，添加缓存标签
+没有使用django自带的模板，因为据说jinja2性能更优。两种模板可以在同一个项目中使用，搜索顺序就是模板引擎定义的顺序，先搜索到哪个用哪个。
 
 ### 视图
 分页功能使用了两种方式：
-  1. django提供的Paginator
-  2. 只提供一个offset变量作为起始位置，每次取分页大小的数量即可
+  1. django提供的Paginator。
+  2. 只提供一个offset变量作为起始位置，每次取分页大小的数量即可。
+思路都是一样的，只是Paginator实现的更复杂一点。
 
 ### 中间件
-参考[这里](https://blog.csdn.net/qq_39687901/article/details/81387584)，实现了一个全局获得request对象的中间件
+参考[这里](https://blog.csdn.net/qq_39687901/article/details/81387584)，实现了一个全局获得request对象的中间件，用于在创建文件（save）之前，添加user字段，在模型save中完成。
 
 ### 缓存
-  1. 问卷列表页的数据缓存，用django的signals模块，当有有新的问卷post提交并save到数据库时，删除缓存
-  2. 问卷详情页的模板片段缓存，jinja2需要扩展缓存标签，其中使用到了werkzeug库
+  1. 问卷列表页的数据缓存，用django的signals模块，当有有新的问卷post提交并save到数据库时，删除缓存。
+  2. 问卷详情页的模板片段缓存，因为jinja2默认没有缓存标签，参考[这里](https://www.kancloud.cn/manual/jinja2/70475)，添加缓存标签，其中使用到了werkzeug库。
 
 ### 前端
 因为不是主攻前端，所以写的比较简陋。     
 **遵守的一点**是：后端查过的数据不会重复查询，记录到当前js环境变量里，或者保存到本地硬盘，减小服务器压力。  
-  1. bootstrap 支持响应式
-  2. crispy 用于表单渲染  
-  3. font-awesome 提供一些图标
-  4. 发布页的js，用到jquery，问卷发布页的js写的磕磕绊绊，但最终的想要的效果实现了，其实就是前后端分离
-  
-发布页**重点**提一下，初衷是为了充分利用数据库中已经存在的数据，选择问题后，会自动向后台查询和当前选择问题相关的选项，除了从后端查询数据， 发布页数据的构建完全和后端分离，构建完使用ajax提交给后端。     
+  1. bootstrap 支持响应式。
+  2. crispy 用于表单渲染。
+  3. font-awesome 提供一些图标。
+  4. 发布页用到**大量**js，主要是jQuery，其实就是前后端分离，写的磕磕绊绊，但最终实现了设想的效果:smile:。
+      * 选择问题后，会自动向后台查询和当前选择问题相关的选项。
+      * 除了从后端查询数据以外，发布页的数据构建完全和后端分离，构建完成使用ajax提交给后端，当然需要添加header的X-CSRFToken字段。
+      * 支持拖动排序。
+
 **大胆的设想一下，提问后，由人工智能程序生成可能的选项也完全是有可能实现的吧！ 
 
->在[这里](https://github.com/Hopetree/izone)借鉴到不少东西，帮忙推广一下！
+>在[这里](https://github.com/Hopetree/izone)也学习到不少东西，帮忙推广一下！
   
