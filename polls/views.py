@@ -53,9 +53,9 @@ def index(request: HttpRequest):
             underway_polls = paginator.page(1)
         except EmptyPage:
             underway_polls = paginator.page(paginator.num_pages)
-        data = {}
+        data = []
         for poll in underway_polls:
-            data[poll.id] = {'url': reverse('polls:detail', args=(poll.id,)), 'title': poll.title}
+            data.append({'url': reverse('polls:detail', args=(poll.id,)), 'title': poll.title})
 
         cache.set(key, data, timeout=3600*24)
         return JsonResponse(data, safe=False)
@@ -75,9 +75,9 @@ def index(request: HttpRequest):
         except EmptyPage:
             finished_polls = paginator.page(paginator.num_pages)
 
-        data = {}
+        data = []
         for poll in finished_polls:
-            data[poll.id] = {'url': reverse('polls:result', args=(poll.id,)), 'title': poll.title}
+            data.append({'url': reverse('polls:result', args=(poll.id,)), 'title': poll.title})
 
         cache.set(key, data, timeout=3600*24)
         return JsonResponse(data, safe=False)
@@ -89,13 +89,13 @@ def index(request: HttpRequest):
         underway_polls_paginator = Paginator(underway_polls, settings.BASE_PAGE_BY)
         finished_polls = Poll.objects.filter(end_date__lte=timezone.now())
         finished_polls_paginator = Paginator(finished_polls, settings.BASE_PAGE_BY)
-        first_underway_page_data = {}  # 加入html
+        first_underway_page_data = []  # 加入html
         for poll in underway_polls_paginator.page(1):
-            first_underway_page_data[poll.id] = {'url': reverse('polls:detail', args=(poll.id,)), 'title': poll.title}
+            first_underway_page_data.append({'url': reverse('polls:detail', args=(poll.id,)), 'title': poll.title})
         first_underway_page_data = json.dumps(first_underway_page_data)
-        first_finished_page_data = {}
+        first_finished_page_data = []
         for poll in finished_polls_paginator.page(1):
-            first_finished_page_data[poll.id] = {'url': reverse('polls:result', args=(poll.id,)), 'title': poll.title}
+            first_finished_page_data.append({'url': reverse('polls:result', args=(poll.id,)), 'title': poll.title})
         first_finished_page_data = json.dumps(first_finished_page_data)
         context = {'underway_polls': underway_polls_paginator.page(1),
                    'finished_polls': finished_polls_paginator.page(1),
