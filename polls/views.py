@@ -205,6 +205,9 @@ def detail(request: HttpRequest, poll_id):
         # 删除
         poll = get_object_or_404(Poll, pk=poll_id)
         poll.delete()
+        # pub数量减少，删除缓存
+        cache.delete('/polls/')
+        cache.delete_pattern('/polls/?*')
         return HttpResponse('删除成功')
 
 
