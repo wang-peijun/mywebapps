@@ -213,37 +213,37 @@ def detail(request: HttpRequest, poll_id):
 
 def vote(request: HttpRequest, poll_id):
     post = request.POST
+    print(post)
     poll = get_object_or_404(Poll, pk=poll_id)
 
     for k in post.keys():
         if k.startswith('csrf'):
             continue
         elif k.startswith('ex'):
-            _, q, c = k.split(':')
-            question = get_object_or_404(Question, pk=q)
-            choice = get_object_or_404(Choice, pk=c)
-            poll_question = get_object_or_404(PollQuestion, poll=poll, question=question)
-            vote = get_object_or_404(Vote, poll_question=poll_question, choice=choice)
-            extra_data = ExtraData(content=post.get(k), vote=vote)
-            extra_data.save()
-        else:
-            question = get_object_or_404(Question, pk=k)
-            poll_question = get_object_or_404(PollQuestion, poll=poll, question=question)
-            if question.choice_type == 2:
-                answer_content = post.get(k)
+            content = post.get(k)
+            if content:
+                _, vote_id = k.split(':')
+                vote = get_object_or_404(Vote, pk=vote_id)
+                extra_data = ExtraData(content=content, vote=vote)
+                extra_data.save()
+        elif k.startswith('pq'):
+            answer_content = post.get(k)
+            if answer_content:
+                _, pq_id = k.split(':')
+                poll_question = get_object_or_404(PollQuestion, pk=pq_id)
+
                 if request.user.is_authenticated:
                     answer = Answer(poll_question=poll_question, content=answer_content, user=request.user)
                 else:
                     answer = Answer(poll_question=poll_question, content=answer_content)
                 answer.save()
-            else:
-                for c in post.getlist(k):
-                    choice = get_object_or_404(Choice, pk=c)
-                    vote = get_object_or_404(Vote, poll_question=poll_question, choice=choice)
-                    vote.num = F('num') + 1
-                    vote.save()
-                    if request.user.is_authenticated:
-                        vote.users.add(request.user)
+        elif k.startswith('vote'):
+            _, vote_id = k.split(':')
+            vote = get_object_or_404(Vote, pk=vote_id)
+            vote.num = F('num') + 1
+            vote.save()
+            if request.user.is_authenticated:
+                vote.users.add(request.user)
 
     messages.add_message(request, messages.INFO, '谢谢参与')
     return HttpResponseRedirect(reverse('polls:result', args=(poll_id,)))

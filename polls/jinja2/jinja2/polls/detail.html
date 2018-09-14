@@ -19,11 +19,11 @@
   {% for pq in poll.pollquestions %}
 
     {% if pq.question.choice_type != 2 %}
-    <strong>{{pq.index}}、 {{pq.question.content}}【{{"多选" if pq.question.choice_type==2 else "单选"}}】: </strong>
+    <strong>{{pq.index}}、 {{pq.question.content}}【{{"多选" if pq.question.choice_type==1 else "单选"}}】: </strong>
     {% else %}
     <strong>{{pq.index}}、 {{pq.question.content}}【回答】: </strong>
 
-    <div><textarea name="{{pq.question.id}}"></textarea></div>
+    <div><textarea name="pq:{{pq.id}}"></textarea></div>
     {% endif %}
 
     {% for vote in pq.voteset %}
@@ -32,17 +32,16 @@
 
     <div class="radio">
       <label>
-        <input type="radio" name="{{pq.question.id}}" value="{{vote.choice.id}}">
+        <input type="radio" name="vote:{{vote.id}}">
         {{vote.index}}. {{vote.choice.content}}
-      </label>{% if vote.choice.has_extra_data %} <input type="text" name="extra:{{vote.choice.id}}:choice}}"> {% endif %}
+      </label>{% if vote.choice.has_extra_data %} <input type="text" name="extra_data:{{vote.id}}"> {% endif %}
     </div>
     {% elif pq.question.choice_type == 1 %}
     <div class="checkbox">
       <label>
-        <input type="checkbox" name="{{pq.question.id}}" value="{{vote.choice.id}}">
+        <input type="checkbox" name="vote:{{vote.id}}">
         {{vote.index}}. {{vote.choice.content}}
-      </label>
-      {% if vote.choice.has_extra_data %} <input type="text" name="extra_data:{{pq.question.id}}:{{vote.choice.id}}"> {% endif %}
+      </label>{% if vote.choice.has_extra_data %} <input type="text" name="extra_data:{{vote.id}}"> {% endif %}
     </div>
     {% endif %}
 

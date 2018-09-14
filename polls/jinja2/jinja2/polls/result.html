@@ -21,7 +21,7 @@
   {% for pq in poll.pollquestions %}
 
     {% if pq.question.choice_type != 2 %}
-    <strong>{{pq.index}}、 {{pq.question.content}}【{{"多选" if pq.question.choice_type==2 else "单选"}}】: </strong>
+    <strong>{{pq.index}}、 {{pq.question.content}}【{{"多选" if pq.question.choice_type==1 else "单选"}}】: </strong>
     {% else %}
     <strong >{{pq.index}}、 {{pq.question.content}}【回答】: </strong>
       <ul>
@@ -37,11 +37,11 @@
 
     <div class="radio">
       <label>
-        <input type="radio" name="{{pq.question.id}}" value="{{vote.choice.id}}">
+        <input type="radio" name="" value="">
         {{vote.index}}. {{vote.choice.content}}
       </label> <span style="color:red">共有{{vote.num}}人选择</span>
       {% if vote.choice.has_extra_data %}
-        <ul>
+        <ul style="color:red">
         {% for extra_data in ExtraData.objects.filter(vote=vote) %}
           <li>{{extra_data.content}}</li>
         {% endfor %}
@@ -51,11 +51,11 @@
     {% elif pq.question.choice_type == 1 %}
     <div class="checkbox">
       <label>
-        <input type="checkbox" name="{{pq.question.id}}" value="{{vote.choice.id}}">
+        <input type="checkbox" name="" value="">
         {{vote.index}}. {{vote.choice.content}}
       </label><span style="color:red">共有{{vote.num}}人选择</span>
       {% if vote.choice.has_extra_data %}
-        <ul>
+        <ul style="color:red">
         {% for extra_data in ExtraData.objects.filter(vote=vote) %}
           <li>{{extra_data.content}}</li>
         {% endfor %}

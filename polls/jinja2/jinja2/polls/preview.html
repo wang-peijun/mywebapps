@@ -18,7 +18,7 @@
   {% for pq in poll.pollquestions %}
 
     {% if pq.question.choice_type != 2 %}
-    <strong>{{pq.index}}、 {{pq.question.content}}【{{"多选" if pq.question.choice_type==2 else "单选"}}】: </strong>
+    <strong>{{pq.index}}、 {{pq.question.content}}【{{"多选" if pq.question.choice_type==1 else "单选"}}】: </strong>
     {% else %}
     <strong>{{pq.index}}、 {{pq.question.content}}【回答】: </strong>
     <div><textarea name="#"></textarea></div>
@@ -42,8 +42,8 @@
       </label>
       {% if vote.choice.has_extra_data %} <input type="text" name="extra_data:#:#"/> {% endif %}
     </div>
-    {% endif %}
 
+    {% endif %}
 
     {% endfor %}
 
