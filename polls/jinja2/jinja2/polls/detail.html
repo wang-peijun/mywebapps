@@ -14,7 +14,6 @@
   {{ csrf_input }}
 
   {% cache '%s' % poll.id, 3600*24*7 %}
- <fieldset>
 
   {% for pq in poll.pollquestions %}
 
@@ -23,40 +22,36 @@
     {% else %}
     <strong>{{pq.index}}、 {{pq.question.content}}【回答】: </strong>
 
-    <div><textarea name="pq:{{pq.id}}"></textarea></div>
+    <div><textarea name="pqq:{{pq.id}}"></textarea></div>
     {% endif %}
 
-    {% for vote in pq.voteset %}
 
+  {% for vote in pq.voteset %}
     {% if pq.question.choice_type == 0 %}
 
     <div class="radio">
+
       <label>
-        <input type="radio" name="vote:{{vote.id}}">
+        <input type="radio" name="pqc:{{pq.id}}" value="{{vote.id}}">
         {{vote.index}}. {{vote.choice.content}}
       </label>{% if vote.choice.has_extra_data %} <input type="text" name="extra_data:{{vote.id}}"> {% endif %}
     </div>
+
     {% elif pq.question.choice_type == 1 %}
     <div class="checkbox">
+
       <label>
-        <input type="checkbox" name="vote:{{vote.id}}">
+        <input type="checkbox" name="pqc:{{pq.id}}" value="{{vote.id}}">
         {{vote.index}}. {{vote.choice.content}}
       </label>{% if vote.choice.has_extra_data %} <input type="text" name="extra_data:{{vote.id}}"> {% endif %}
     </div>
     {% endif %}
-
-
-    {% endfor %}
-
-    <hr/>
-
+  {% endfor %}
+  <hr/>
   {% endfor %}
 
-
   <div><input type="submit" value="提交" /></div>
-   </fieldset>
   {% endcache %}
-
 
 </form>
 

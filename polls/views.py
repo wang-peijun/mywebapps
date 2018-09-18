@@ -226,7 +226,7 @@ def vote(request: HttpRequest, poll_id):
                 vote = get_object_or_404(Vote, pk=vote_id)
                 extra_data = ExtraData(content=content, vote=vote)
                 extra_data.save()
-        elif k.startswith('pq'):
+        elif k.startswith('pqq'):
             answer_content = post.get(k)
             if answer_content:
                 _, pq_id = k.split(':')
@@ -237,8 +237,8 @@ def vote(request: HttpRequest, poll_id):
                 else:
                     answer = Answer(poll_question=poll_question, content=answer_content)
                 answer.save()
-        elif k.startswith('vote'):
-            _, vote_id = k.split(':')
+        elif k.startswith('pqc'):
+            vote_id = post.get(k)
             vote = get_object_or_404(Vote, pk=vote_id)
             vote.num = F('num') + 1
             vote.save()
