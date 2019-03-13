@@ -3,61 +3,64 @@
 {% load i18n %}
 {% load account socialaccount %}
 {% load crispy_forms_tags %}
+{% load staticfiles %}
 
 {% block head_title %}{% trans "Sign In" %}{% endblock %}
 
-    {% block extra_head %}
-    <style type="text/css">
-.hrLine{
-    vertical-align:middle; display:inline-block;
-}
-</style>
-    {% endblock %}
+{% block css %}
+<link href="{% static 'css/account.css' %}" rel="stylesheet">
+<script src="{% static 'js/account.js' %}"></script>
+{% endblock %}
+
 
 {% block content %}
 
 
-          <h2 class="text-center">{% trans "Sign In" %}</h2>
-          <form class="login" method="POST" action="{% url 'account_login' %}">
-            {% csrf_token %}
-            {{ form|crispy }}
+<h2 class="text-center">{% trans "Sign In" %}</h2>
+<form class="login" method="POST" action="{% url 'account_login' %}">
+  {% csrf_token %}
+  {{ form|crispy }}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+  {% endif %}
+  <div class="form-group" id="div_id_captcha">
+    <label for="id_captcha" class="control-label">验证码*</label><br>
+    <input id="id_captcha" name="captcha" type="text" class="form-control"/>
+    <img src="{{request.session.captcha_img}}">
+  </div>
+  <a class="secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+  <input class="pull-right btn btn-info btn-sm " type="submit" value="{% trans 'Sign In' %}"/>
 
-            {% if redirect_field_value %}
-            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-            {% endif %}
-            <a class="secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
-            <input class="pull-right btn btn-info btn-sm " type="submit" value="登录"/>
-          </form>
+</form>
 
-          {% get_providers as socialaccount_providers %}
-          {% if socialaccount_providers %}
+{% get_providers as socialaccount_providers %}
+{% if socialaccount_providers %}
 
-          <div class="socialaccount_ballot text-center">
-            <br/>
+<div class="socialaccount_ballot text-center">
+  <br/>
 
+  <hr class="hrLine" style="width:30%;"/>
+  <span style="width: 10%">第三方登录</span>
+  <hr class="hrLine" style="width:30%;"/>
 
-            <hr class="hrLine" style="width:30%;"/>  <span style="width: 10%">第三方登录</span>  <hr class="hrLine" style="width:30%;"/>
+  <div class="row">
+    <div class="col-md-4 col-sm-4 col-md-offset-4 col-sm-offset-4">
+      <table>
+        <tr class="socialaccount_providers">
+          {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+        </tr>
+      </table>
+    </div>
+  </div>
 
-            <div class="row">
-            <div class="col-md-4 col-sm-4 col-md-offset-4 col-sm-offset-4">
-            <table>
-            <tr class="socialaccount_providers">
-              {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-            </tr>
-            </table>
-              </div>
-            </div>
+</div>
 
-          </div>
+{% include "socialaccount/snippets/login_extra.html" %}
 
-          <div>
-          <p>还没有账号？请
-          <a href="{{ signup_url }}">注册</a></p>
-          </div>
-
-          {% include "socialaccount/snippets/login_extra.html" %}
-
-          {% endif %}
+{% endif %}
 
 
 {% endblock %}
+
+
+

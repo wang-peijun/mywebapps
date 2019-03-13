@@ -5,6 +5,12 @@
 {% block head_title %}{% trans "Signup" %}{% endblock %}
 
 {% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block css %}
+<link href="{% static 'css/account.css' %}" rel="stylesheet">
+<script src="{% static 'js/account.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 <h1>{% trans "Sign Up" %}</h1>
@@ -17,7 +23,12 @@
   {% if redirect_field_value %}
   <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
   {% endif %}
-  <button type="submit">{% trans "Sign Up" %} &raquo;</button>
+  <div class="form-group" id="div_id_captcha">
+  <label for="id_captcha" class="control-label">验证码*</label><br>
+  <input id="id_captcha" name="captcha" type="text" class="form-control"/>
+    <img src="{{request.session.captcha_img}}">
+  </div>
+    <button type="submit" class="btn btn-default">{% trans "Sign Up" %} &raquo;</button>
 </form>
 
 {% endblock %}

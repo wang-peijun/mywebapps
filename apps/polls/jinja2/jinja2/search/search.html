@@ -1,0 +1,40 @@
+{% extends 'jinja2/base.html' %}
+
+{% block css %}
+<style>
+  span.highlighted{
+    color: red;
+  }
+  .list-group p {text-indent: 2em;}
+</style>
+{% endblock %}
+
+{% block base_content %}
+<div class="container">
+  {% if query %}
+  <h3>搜索"<span style="color: red;">{{query}}</span>"结果：</h3>
+
+  <section>
+    {% for result in page.object_list %}
+    <div class="list-group">
+    <a href="{{ result.object.get_absolute_url() }}" class="list-group-item">
+     <h3>{{ highlight('bootstrap3', Token(0, "highlight result.object.title with query")).render(dict(result=result, query=query, page=page))|safe }}</h3>
+    <div class="desc">{{ highlight('bootstrap3', Token(0, "highlight result.object.description with query")).render(dict(result=result, query=query, page=page))|safe }}</div>
+    </a>
+      </div>
+    {% endfor %}
+  </section>
+  {% if page.has_previous() or page.has_next() %}
+  <div>
+    {% if page.has_previous() %}<a href="?q={{ query }}&amp;page={{ page.previous_page_number() }}">{% endif %}&laquo;
+    Previous{% if page.has_previous() %}</a>{% endif %}
+    |
+    {% if page.has_next() %}<a href="?q={{ query }}&amp;page={{ page.next_page_number() }}">{% endif %}Next &raquo;{% if
+    page.has_next() %}</a>{% endif %}
+  </div>
+  {% endif %}
+  {% else %}
+  {# Show some example queries to run, maybe query syntax, something else? #}
+  {% endif %}
+</div>
+{% endblock %}

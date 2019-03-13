@@ -11,16 +11,17 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import sys
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'asdf'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -50,11 +51,11 @@ INSTALLED_APPS = [
     'crispy_forms',
 
     'polls',
-    'myauth'
 
+    'haystack'
 ]
 
-AUTH_USER_MODEL = 'myauth.User'
+AUTH_USER_MODEL = 'auth.User'
 
 AUTHENTICATION_BACKENDS = (
     # Needed to login by username in Django admin, regardless of `allauth`
@@ -68,13 +69,13 @@ SITE_ID = 1
 
 LOGIN_REDIRECT_URL = '/'
 
-ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'  # none
 # 登录方式，选择用户名或者邮箱都能登录
 ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 # 设置用户注册的时候必须填写邮箱地址
 ACCOUNT_EMAIL_REQUIRED = True
 # 登出直接退出，不用确认
-ACCOUNT_LOGOUT_ON_GET = True
+# ACCOUNT_LOGOUT_ON_GET = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -85,7 +86,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'polls.middleware.GlobalRequestMiddleware'
+    'polls.middleware.GlobalRequestMiddleware',
+    'polls.middleware.AddCaptchaAndVerify'
 ]
 
 ROOT_URLCONF = 'mywebapp.urls'
@@ -133,16 +135,6 @@ WSGI_APPLICATION = 'mywebapp.wsgi.application'
 #         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
 #     }
 # }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mywebapps',
-        'USER': 'ma',
-        'PASSWORD': 'centos',
-        'HOST': '192.168.10.129',
-        'PORT': '3306',
-    }
-}
 
 
 # Password validation
@@ -192,16 +184,18 @@ BASE_PAGE_ORPHANS = 0
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": [
-            "redis://192.168.10.129:6379/0"
-        ],
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            # "REDIS_CLIENT_CLASS": 'fakeredis.FakeRedis',
-            "CONNECTION_POOL_KWARGS": {"max_connections": 100}
-        }
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        # 使用whoosh引擎
+        'ENGINE': 'haystack.backends.whoosh_cn_backend.WhooshEngine',
+        # 索引文件路径
+        'PATH': os.path.join(BASE_DIR, 'whoosh_index'),
     }
 }
+# 当添加、修改、删除数据时，自动生成索引
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
+
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 5
+
+from .personal_settings import *
+

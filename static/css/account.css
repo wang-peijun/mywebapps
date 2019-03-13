@@ -1,0 +1,12 @@
+
+#id_captcha{
+    width: 40%;display: inline;
+}
+
+#div_id_captcha img{
+    height: 3em;
+}
+
+.hrLine{
+    vertical-align:middle; display:inline-block;
+}

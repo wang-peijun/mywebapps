@@ -1,0 +1,45 @@
+{% extends 'jinja2/polls/base.html' %}
+{% block head_title %}问卷列表{% endblock %}
+{% block content %}
+<h1>我发布的问卷</h1>
+<div class="underway_polls">
+<h3>正在进行的问卷</h3>
+  <div class="panel panel-default">
+  <ul class="list-group">
+  {% for p in upage %}
+    <li class="list-group-item"><a href="{{url('polls:result', args=(p.id,))}}">{{p.title}}</a></li>
+  {% endfor %}
+  </ul>
+  </div>
+    {% if upage.has_previous() or upage.has_next() %}
+  <div>
+    {% if upage.has_previous() %}<a href="?upage={{ upage.previous_page_number() }}">{% endif %}&laquo;
+    上一页{% if upage.has_previous() %}</a>{% endif %}
+    |
+    {% if upage.has_next() %}<a href="?upage={{ upage.next_page_number() }}">{% endif %}下一页 &raquo;{% if
+    upage.has_next() %}</a>{% endif %}
+  </div>
+  {% endif %}
+</div>
+<hr>
+<div class="underway_polls">
+<h3>已完成的问卷</h3>
+  <div class="panel panel-default">
+  <ul class="list-group">
+  {% for p in fpage %}
+    <li class="list-group-item"><a href="{{url('polls:result', args=(p.id,))}}">{{p.title}}</a></li>
+  {% endfor %}
+  </ul>
+  </div>
+      {% if fpage.has_previous() or fpage.has_next() %}
+  <div>
+    {% if fpage.has_previous() %}<a href="?fpage={{ fpage.previous_page_number() }}">{% endif %}&laquo;
+    上一页{% if fpage.has_previous() %}</a>{% endif %}
+    |
+    {% if fpage.has_next() %}<a href="?fpage={{ fpage.next_page_number() }}">{% endif %}下一页 &raquo;{% if
+    fpage.has_next() %}</a>{% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+
