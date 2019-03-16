@@ -68,10 +68,10 @@
 
 ---
 
+用到的主要库：
 
+后端：[django][]，[allauth][]，[crispy][]，[jinja2][]，[django-redis][]，[werkzeug][]，[uWSGI][]，[nginx][], [haystack][], [jieba][], [django-extensions][]
 
-用到的主要模块：
-后端：[django][]，[allauth][]，[crispy][]，[jinja2][]，[django-redis][]，[werkzeug][]，[uWSGI][]，[nginx][], [haystack][], [jieba][]
 前端：[jquery][]，[bootstrap][]，[font-awesome][]
 
 [werkzeug]: http://werkzeug.pocoo.org/
@@ -87,6 +87,9 @@
 [django-redis]: https://github.com/bluedazzle/django-redis-doc-chs/blob/master/source/index.rst
 [haystack]: http://haystacksearch.org/
 [jieba]: https://github.com/fxsjy/jieba
+[django-extensions]: https://django-extensions-zh.readthedocs.io/zh_CN/latest/
 
 >在[这里](https://github.com/Hopetree/izone)也学习到不少东西，帮忙推广一下！
+>
+>调查问卷内容爬取自[问卷星](https://www.wjx.cn/newwjx/mysojump/newselecttemplete.aspx)
   
