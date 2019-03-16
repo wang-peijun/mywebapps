@@ -52,7 +52,9 @@ INSTALLED_APPS = [
 
     'polls',
 
-    'haystack'
+    'haystack',
+
+    'django_extensions',
 ]
 
 AUTH_USER_MODEL = 'auth.User'
@@ -159,7 +161,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'zh_Hans'
+LANGUAGE_CODE = 'zh-Hans'
 
 TIME_ZONE = 'Asia/Shanghai'
 
@@ -178,6 +180,8 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+
+# STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 BASE_PAGE_BY = 10
 BASE_PAGE_ORPHANS = 0

@@ -1,7 +1,6 @@
 # mywebapps  
-一个实验性的网站，实现自己设想的web应用。目前使用的django框架。   
-站点 http://www.mapy.tech
-测试账号：su 密码：centos66
+一个个人实验练习测试学习使用的网站。使用的django框架。
+站点 http://47.105.206.72
 
 ## 问卷调查
 ### 概述

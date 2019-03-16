@@ -33,7 +33,8 @@ class Poll(models.Model):
 
     def save(self, *args, **kwargs):
         request = GlobalRequestMiddleware.getRequest()
-        self.owner = request.user
+        if request:
+            self.owner = request.user
         return super().save(*args, **kwargs)
 
     def get_absolute_url(self):
